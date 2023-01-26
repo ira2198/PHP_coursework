@@ -33,7 +33,7 @@ $post1 = new Post(
 
 $comment1 = new Comment(
     $faker->randomDigitNotNull(),
-    $person1, 
+    $person1,
     $post1, 
     $faker->realText(rand (20, 100))
 );
