@@ -6,7 +6,8 @@ namespace GeekBrains\LevelTwo\Users;
 class User 
 {
     public function __construct(
-        private int $id,
+        private UUID $uuid,
+        private string $login,
         private string $userName,
         private string $userSurname
     )
@@ -15,14 +16,14 @@ class User
 
     public function  __toString() 
     {
-        return $this->id . ' - ' . $this->userName . ' ' . $this->userSurname . PHP_EOL;
+        return  'Пользователь ' . $this->login . "\n" . $this->uuid . ' - ' . $this->userName . ' ' . $this->userSurname . PHP_EOL;
     }  
 
 
     
-    public function getId (): int
+    public function getUuid (): UUID
     {
-        return $this->id;
+        return $this->uuid;
     }
     public function getUserName (): string
     {
@@ -31,6 +32,9 @@ class User
     public function getUserSurname (): string
     {
         return $this->userSurname;
+    }
+    public function getLogin ():string{
+        return $this->login;
     }
 
 
@@ -41,6 +45,10 @@ class User
     public function setUserSurname ( string $userSurname): void
     {
         $this->userSurname= $userSurname;
+    }
+    public function setLogin(string $login):void
+    {
+        $this->login = $login;
     }
 
 }

@@ -3,13 +3,13 @@
 namespace GeekBrains\LevelTwo\Blog;
 
 use GeekBrains\LevelTwo\Users\User;
-
+use GeekBrains\LevelTwo\Users\UUID;
 
 class Comment
 {
     public function __construct(
-        private int $id,
-        private User $userId,
+        private UUID $uuid,
+        private User $auther,
         private Post $articleId,
         private string $text
     ){        
@@ -17,18 +17,18 @@ class Comment
 
     public function  __toString() 
     {
-        return 'Пользователь: ' . $this->userId . "Оставил комментарий к статье \n" . $this->text  . PHP_EOL;
+        return 'Пользователь: ' . $this->auther . "Оставил комментарий к статье \n" . $this->text  . PHP_EOL;
     }  
 
 
     
-    public function getId (): int
+    public function getUuid (): UUID
     {
-        return $this->id;
+        return $this->uuid;
     }
     public function getUserId (): User
     {
-        return $this->userId;
+        return $this->auther;
     }
     public function getArticleId (): Post
     {

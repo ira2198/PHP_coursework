@@ -3,12 +3,13 @@
 namespace GeekBrains\LevelTwo\Blog;
 
 use GeekBrains\LevelTwo\Users\User;
+use GeekBrains\LevelTwo\Users\UUID;
 
 class Post
 {
     public function __construct(
-        private int $id, 
-        private User $userId,
+        private UUID $uuid, 
+        private User $auther,
         private string $title,
         private string $content
     )
@@ -17,18 +18,18 @@ class Post
 
     public function  __toString() 
     {
-        return $this->title . "\n" . $this->content . ".\n" . 'Автор: ' . $this->userId  . PHP_EOL;
+        return $this->title . "\n" . $this->content . ".\n" . 'Автор: ' . $this->auther  . PHP_EOL;
     }  
 
 
     
-    public function getId (): int
+    public function getUuid (): UUID
     {
-        return $this->id;
+        return $this->uuid;
     }
-    public function getUserId (): User
+    public function getAuther (): User
     {
-        return $this->userId;
+        return $this->auther;
     }
     public function getTitle (): string
     {

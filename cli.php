@@ -1,63 +1,90 @@
 <?php
-use GeekBrains\LevelTwo\Users\User;
+
+use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\SqliteUsersRep;
+use GeekBrains\LevelTwo\Users\Commands\CreateUserCommand;
+use GeekBrains\LevelTwo\Users\{User, UUID};
 use GeekBrains\LevelTwo\Blog\{Post, Comment};
+use GeekBrains\LevelTwo\Users\Repositories\PostsRepositories\sqlitePostsRepository;
+use GeekBrains\LevelTwo\Users\Repositories\CommentsRepositories\sqliteCommentsRepository;
 
- require __DIR__ . "/vendor/autoload.php";
+include __DIR__ . "/vendor/autoload.php";
 
- $faker = Faker\Factory::create('ru_RU');
+$connectDB = new PDO('sqlite:' .  __DIR__ . '/blog.sqlite');
 
-// spl_autoload_register('customAutoloader');
+$faker = Faker\Factory::create('ru_RU');
+
+$userRepository = new SqliteUsersRep($connectDB);
+$postRepository = new sqlitePostsRepository($connectDB);
+$commentRepository = new sqliteCommentsRepository($connectDB);
 
 
-// function customAutoloader($class){
-//     $file = $class . ".php";
-//     $file = str_replace("\\", "/", $file);
-//     $file = str_replace("GeekBrains/LevelTwo/", "src/", $file);
-//     var_dump($file);
-//     if (file_exists($file)){
-//          include $file;
-//     }
+
+//________________________Создаем Юзеров___________________
+
+// $userRepositiry->save(new User(UUID::random(), "VoVo", "Vova", "Volodin"));
+// $userRepositiry->save(new User(UUID::random(), "admin", "Ola", "Lola"));
+
+
+//$command = new CreateUserCommand($userRepositiry);
+// try {
+//     $command->handle($argv);
+// } catch (Exception $err) {
+//     echo $err->getMessage();
+// } 
+
+//__________ И извлекаем______________
+
+// try {
+//     echo $userRepositiry->getByUserLogin('VoVo');
+// } catch (Exception $err) {
+//     echo $err->getMessage();
+// } 
+
+
+
+//_______________Создаем и извлекаем посты________
+
+// try {
+//     $user= $userRepositiry-> get(new UUID('49a45dd2-37cc-44b2-9c90-0212e15ba067'));
+
+//     $post = new Post (
+//         UUID::random(),
+//         $user,
+//         $faker->realText(rand(5, 30)),
+//         $faker->realText(rand (100, 400))
+//     );
+//     $postRepositiry->save($post);
+
+// } catch (Exception $err) {
+//     echo $err->getMessage();
 // }
 
-$person1 = new User(
-    $faker->randomDigitNotNull(),
-    $faker->firstName(),
-    $faker->lastName());
+// try {
+//     $post = $postRepositiry->get(new UUID('f8541067-f5c8-450b-a696-f037261277fb'));
 
-$post1 = new Post(
-    $faker->randomDigitNotNull(),
-    $person1,
-    $faker->realText(rand(5, 30)), 
-    $faker->realText(rand (200, 400))
-);
+//     print_r($post);
 
-$comment1 = new Comment(
-    $faker->randomDigitNotNull(),
-    $person1, 
-    $post1, 
-    $faker->realText(rand (20, 100))
-);
+// } catch (Exception $err) {
+//     echo $err->getMessage();
+// }
 
+//_______________Создаем и извлекаем коммертарии________
 
-$marker = $argv[1] ?? null;
+try {
+    $post= $postRepository-> get(new UUID('f8541067-f5c8-450b-a696-f037261277fb'));
+    $user= $userRepository-> get(new UUID('1e7894ab-b949-4f9f-b855-d38020fe7bd6'));
 
-switch ($marker){
-    case "user":
-        echo $person1; 
-        break;
-    case "post":
-        echo $post1;
-        break;
-    case "comment":
-        echo $comment1;
-        break;
-    case "all":
-        echo $person1; 
-        echo $post1;
-        echo $comment1;
-        break;
-        case null:
-          echo  "Ошибка! Вы не указали маркер или указали его не верно.";
+    $comment = new Comment (
+        UUID::random(),
+        $user,
+        $post,
+        $faker->realText(rand (50, 100))
+    );
+
+    print_r($comment);
+    $commentRepository->save($comment);
+
+} catch (Exception $err) {
+    echo $err->getMessage();
 }
-
 
