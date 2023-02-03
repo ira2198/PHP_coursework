@@ -33,7 +33,7 @@ class sqlitePostsRepository implements PostRepositoryInterface
              ]);
     }
 
-    public function get(UUID $uuid)
+    public function get(UUID $uuid): Post
     {
         $statement = $this-> connectDB-> prepare (
             'SELECT * FROM posts WHERE uuid = :uuid'

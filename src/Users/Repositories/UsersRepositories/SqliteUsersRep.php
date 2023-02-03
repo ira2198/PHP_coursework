@@ -3,6 +3,7 @@ namespace GeekBrains\LevelTwo\Users\Repositories\UsersRepositories;
 
 use GeekBrains\LevelTwo\Users\{UUID, User};
 use GeekBrains\LevelTwo\Users\Exceptions\UserNotFoundExceptions;
+use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\UsersRepositoryInterface;
 use PDO;
 use PDOStatement;
 
@@ -49,8 +50,6 @@ class SqliteUsersRep implements UsersRepositoryInterface
 
        return $this->getUser($statement, $login);
     }
-
-
 
 
     private function getUser(PDOStatement  $statement, string $errorString): User

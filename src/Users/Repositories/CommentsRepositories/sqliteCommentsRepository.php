@@ -11,7 +11,7 @@ use GeekBrains\LevelTwo\Users\Exceptions\CommentNotFoundException;
 
 use PDO;
 
-class sqliteCommentsRepository implements CommentsRepositoryInterface 
+class sqliteCommentsRepository  
 {
     
     public function __construct(
@@ -23,11 +23,11 @@ class sqliteCommentsRepository implements CommentsRepositoryInterface
     public function save(Comment $comment)
     {
         $statement = $this->connectDB->prepare(
-            "INSERT INTO comments (uuid, author_uuid, article_uuid, text) VALUES (:uuid, :author, :article_uuid, :text)");
+            "INSERT INTO comments (uuid, author_uuid, article_uuid, text) VALUES (:uuid, :author_uuid, :article_uuid, :text)");
             
             $statement->execute([
                 ':uuid' => $comment->getUuid(),
-                ':author' => $comment->getUserId()->getUuid(),
+                ':author_uuid' => $comment->getUserId()->getUuid(),
                 ':article_uuid' => $comment -> getArticleId ()->getUuid(),
                 ':text' => $comment-> getText()
              ]);
@@ -54,18 +54,15 @@ class sqliteCommentsRepository implements CommentsRepositoryInterface
             throw new CommentNotFoundException(  
                 "Cannot find post: $commentUuid");
         }
-        var_dump($result);
-        die();
-               
-        $postRepository = new sqlitePostsRepository($this->connectDB);
-        $post = $postRepository->get(new UUID($result['article_uuid']));
 
+             
         $userRepository = new SqliteUsersRep($this->connectDB);
         $user = $userRepository->get(new UUID($result['author_uuid']));
 
-        print_r($post);
-        print_r($user);
-        
+        $postRepository = new sqlitePostsRepository($this->connectDB);
+        $post = $postRepository->get(new UUID($result['article_uuid']));
+
+            
         return new Comment(
             new UUID($result['uuid']),
             $user,

@@ -25,7 +25,7 @@ $commentRepository = new sqliteCommentsRepository($connectDB);
 // $userRepositiry->save(new User(UUID::random(), "admin", "Ola", "Lola"));
 
 
-//$command = new CreateUserCommand($userRepositiry);
+// $command = new CreateUserCommand($userRepositiry);
 // try {
 //     $command->handle($argv);
 // } catch (Exception $err) {
@@ -70,21 +70,21 @@ $commentRepository = new sqliteCommentsRepository($connectDB);
 
 //_______________Создаем и извлекаем коммертарии________
 
-try {
-    $post= $postRepository-> get(new UUID('f8541067-f5c8-450b-a696-f037261277fb'));
-    $user= $userRepository-> get(new UUID('1e7894ab-b949-4f9f-b855-d38020fe7bd6'));
+// try {
+//     $post= $postRepository-> get(new UUID('f8541067-f5c8-450b-a696-f037261277fb'));
+//     $user= $userRepository-> get(new UUID('1e7894ab-b949-4f9f-b855-d38020fe7bd6'));
 
-    $comment = new Comment (
-        UUID::random(),
-        $user,
-        $post,
-        $faker->realText(rand (50, 100))
-    );
+//     $comment = new Comment (
+//         UUID::random(),
+//         $user,
+//         $post,
+//         $faker->realText(rand (50, 100))
+//     );
 
-    print_r($comment);
-    $commentRepository->save($comment);
+//     print_r($comment);
+//     $commentRepository->save($comment);
 
-} catch (Exception $err) {
-    echo $err->getMessage();
-}
+// } catch (Exception $err) {
+//     echo $err->getMessage();
+// }
 
