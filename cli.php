@@ -15,7 +15,7 @@ $faker = Faker\Factory::create('ru_RU');
 
 $userRepository = new SqliteUsersRep($connectDB);
 $postRepository = new sqlitePostsRepository($connectDB);
-$commentRepository = new sqliteCommentsRepository($connectDB);
+$commentsRepository = new sqliteCommentsRepository($connectDB);
 
 
 
