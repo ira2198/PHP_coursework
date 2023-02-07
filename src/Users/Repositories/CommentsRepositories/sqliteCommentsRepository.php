@@ -10,8 +10,7 @@ use GeekBrains\LevelTwo\Users\Repositories\PostsRepositories\sqlitePostsReposito
 use GeekBrains\LevelTwo\Users\Exceptions\CommentNotFoundException;
 
 use PDO;
-
-class sqliteCommentsRepository  
+class sqliteCommentsRepository implements CommentsRepositoryInterface 
 {
     
     public function __construct(
@@ -70,5 +69,17 @@ class sqliteCommentsRepository
             $result['text']
         );
     }  
+    public function delete(UUID $uuid)
+    {
+        $statement= $this->connectDB->prepare(
+            'DELETE FROM comments WHERE comments.uuid = :uuid;'
+        );
+
+        $statement->execute([
+            ':uuid' => $uuid
+        ]);
+
+    }
+
 
 }

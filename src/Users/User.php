@@ -44,7 +44,7 @@ class User
     }
     public function setUserSurname ( string $userSurname): void
     {
-        $this->userSurname= $userSurname;
+        $this->userSurname = $userSurname;
     }
     public function setLogin(string $login):void
     {

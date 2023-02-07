@@ -7,9 +7,10 @@ use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\UsersRepositoryInte
 use PDO;
 use PDOStatement;
 
+
 class SqliteUsersRep implements UsersRepositoryInterface
 { 
-    public function __construct(
+       public function __construct(
         private PDO $connectDB
     ) {        
     }

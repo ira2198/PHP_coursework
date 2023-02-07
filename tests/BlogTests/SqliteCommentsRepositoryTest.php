@@ -1,6 +1,6 @@
 <?php
 
-namespace BlogTests;
+namespace tests\BlogTests;
 
 use GeekBrains\LevelTwo\Users\{User, UUID};
 use GeekBrains\LevelTwo\Blog\{Post, Comment};
@@ -31,7 +31,7 @@ class SqliteCommentsRepositoryTest extends TestCase
         $repository->get(new UUID('d02eef61-1a06-460f-b859-202b84164734'));
     }
     
-    public function testItSavesPostToDatabase(): void
+    public function testItSavesCommentsToDatabase(): void
     {
         $connectionStub = $this->createStub(PDO::class);
         $statementMock = $this->createMock(PDOStatement::class);
@@ -72,7 +72,7 @@ class SqliteCommentsRepositoryTest extends TestCase
             ));
     }
           
-    public function testItGetPostByUuid(): void
+    public function testItGetCommentByUuid(): void
     {
         $connectionStub = $this->createStub(\PDO::class);
         $statementMock = $this->createMock(\PDOStatement::class);

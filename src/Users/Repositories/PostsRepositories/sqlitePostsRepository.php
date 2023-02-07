@@ -23,11 +23,11 @@ class sqlitePostsRepository implements PostRepositoryInterface
     public function save(Post $post)
     {
         $statement = $this->connectDB->prepare(
-            "INSERT INTO posts (uuid, author_uuid, title, content) VALUES (:uuid, :author, :title, :content)");
+            "INSERT INTO posts (uuid, author_uuid, title, content) VALUES (:uuid, :author_uuid, :title, :content)");
             
             $statement->execute([
                 ':uuid' => $post->getUuid(),
-                ':author' => $post-> getAuther()->getUuid(),
+                ':author_uuid' => $post-> getAuther()->getUuid(),
                 ':title' => $post -> getTitle (),
                 ':content' => $post-> getContent()
              ]);
@@ -38,7 +38,7 @@ class sqlitePostsRepository implements PostRepositoryInterface
         $statement = $this-> connectDB-> prepare (
             'SELECT * FROM posts WHERE uuid = :uuid'
         );
-        $statement-> execute([':uuid' => (string)$uuid]);
+        $statement->execute([':uuid' => (string)$uuid]);
 
         return $this->getPost($statement, $uuid);
     }
@@ -64,4 +64,17 @@ class sqlitePostsRepository implements PostRepositoryInterface
             $result['content']
         );
     }
+
+    public function delete(UUID $uuid)
+    {
+        $statement= $this->connectDB->prepare(
+            'DELETE FROM posts WHERE posts.uuid = :uuid;'
+        );
+
+        $statement->execute([
+            ':uuid' => $uuid
+        ]);
+
+    }
+
 }

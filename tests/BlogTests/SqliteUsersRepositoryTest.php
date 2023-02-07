@@ -1,6 +1,6 @@
 <?php
 
-namespace BlogTests;
+namespace tests\BlogTests;
 
 
 use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\SqliteUsersRep;

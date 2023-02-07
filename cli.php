@@ -34,11 +34,11 @@ $commentsRepository = new sqliteCommentsRepository($connectDB);
 
 //__________ И извлекаем______________
 
-// try {
-//     echo $userRepositiry->getByUserLogin('VoVo');
-// } catch (Exception $err) {
-//     echo $err->getMessage();
-// } 
+try {
+    echo $userRepository->getByUserLogin('VoVo');
+} catch (Exception $err) {
+    echo $err->getMessage();
+} 
 
 
 

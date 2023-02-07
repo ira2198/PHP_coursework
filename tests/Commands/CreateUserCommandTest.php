@@ -1,5 +1,5 @@
 <?php
-namespace Commands;
+namespace tests\Commands;
 use GeekBrains\LevelTwo\Users\Commands\CreateUserCommand;
 use GeekBrains\LevelTwo\Users\Commands\Arguments;
 use GeekBrains\LevelTwo\Users\Exceptions\CommandException;

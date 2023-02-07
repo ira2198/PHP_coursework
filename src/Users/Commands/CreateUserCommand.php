@@ -3,12 +3,9 @@
 namespace GeekBrains\LevelTwo\Users\Commands;
 
 use GeekBrains\LevelTwo\Users\{User, UUID};
-use GeekBrains\LevelTwo\Blog\Exceptions\ArgumentsException;
 use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\UsersRepositoryInterface;
 use GeekBrains\LevelTwo\Users\Exceptions\UserNotFoundExceptions;
-use GeekBrains\LevelTwo\Users\Exceptions\InvalidArgumentException;
 use GeekBrains\LevelTwo\Users\Exceptions\CommandException;
-
 
 
 class CreateUserCommand
@@ -48,6 +45,3 @@ private function userExists(string $login): bool
     return true;
     }
 }
-
-
-
