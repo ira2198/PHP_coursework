@@ -1,5 +1,6 @@
 <?php
 
+
 use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\SqliteUsersRep;
 use GeekBrains\LevelTwo\Users\Commands\CreateUserCommand;
 use GeekBrains\LevelTwo\Users\{User, UUID};
@@ -7,9 +8,10 @@ use GeekBrains\LevelTwo\Blog\{Post, Comment};
 use GeekBrains\LevelTwo\Users\Repositories\PostsRepositories\sqlitePostsRepository;
 use GeekBrains\LevelTwo\Users\Repositories\CommentsRepositories\sqliteCommentsRepository;
 
-include __DIR__ . "/vendor/autoload.php";
 
-$connectDB = new PDO('sqlite:' .  __DIR__ . '/blog.sqlite');
+$container = require __DIR__ . '/bootstrap.php';
+
+
 
 $faker = Faker\Factory::create('ru_RU');
 

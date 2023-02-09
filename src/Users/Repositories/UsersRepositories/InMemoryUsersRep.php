@@ -3,6 +3,7 @@ namespace GeekBrains\LevelTwo\Users\Repositories\UsersRepositories;
 
 use GeekBrains\LevelTwo\Users\{User, UUID};
 use GeekBrains\LevelTwo\Users\Exceptions\UserNotFoundExceptions;
+use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\UsersRepositoryInterface;
 
 
 class InMemoryUsersRep implements UsersRepositoryInterface
@@ -25,7 +26,12 @@ class InMemoryUsersRep implements UsersRepositoryInterface
       
         }
         throw new UserNotFoundExceptions("User not Found: $uuid");
-    }           
+    }   
+    
+    public function getByUserLogin(string $login): User
+    {
+       
+    }
 }
 
 

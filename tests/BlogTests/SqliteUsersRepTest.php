@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\BlogTests;
+namespace GeekBrains\UnitTests\BlogTests;
 
 
 use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\SqliteUsersRep;
@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use PDO;
 use PDOStatement;
 
-class SqliteUsersRepTest extends TestCase
+class SqliteUsersRepTest extends TestCase 
 {
     public function testItThrowsAnExceptionWhenUserNotFound(): void
     {

@@ -2,6 +2,6 @@
 
 namespace GeekBrains\LevelTwo\Users\Exceptions;
 
-use Exception;
 
-class UserNotFoundExceptions extends Exception {}
+
+class UserNotFoundExceptions extends AppException {}

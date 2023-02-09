@@ -5,6 +5,11 @@
             "GeekBrains\\LevelTwo\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+        "GeekBrains\\UnitTests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Ira",

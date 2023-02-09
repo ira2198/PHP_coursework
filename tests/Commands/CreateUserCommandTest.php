@@ -1,5 +1,7 @@
 <?php
-namespace tests\Commands;
+namespace GeekBrains\UnitTests\Commands;
+
+
 use GeekBrains\LevelTwo\Users\Commands\CreateUserCommand;
 use GeekBrains\LevelTwo\Users\Commands\Arguments;
 use GeekBrains\LevelTwo\Users\Exceptions\CommandException;
@@ -55,7 +57,7 @@ class CreateUserCommandTest extends TestCase
 
     // Ожидаем, что будет брошено исключение
         $this->expectException(ArgumentsException::class);
-        $this->expectExceptionMessage('No such argument: user_name');
+        $this->expectExceptionMessage('No such argument: Ivan');
     // Запускаем команду
         $command->handle(new Arguments(['user_name' => 'Ivan']));
     }
@@ -71,7 +73,7 @@ class CreateUserCommandTest extends TestCase
           $command->handle(new Arguments([
               'login' => 'Ivan',
    // Нам нужно передать имя пользователя, чтобы дойти до проверки наличия фамилии
-              'user_surname' => 'Ivan',
+              'user_surname' => 'Nikitin',
           ]));
       }
    

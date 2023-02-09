@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\Commands;
+namespace GeekBrains\UnitTests\Commands;
 
 
 use GeekBrains\LevelTwo\Users\Commands\Arguments;

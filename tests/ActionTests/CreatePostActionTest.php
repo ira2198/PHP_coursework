@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\ActionTests;
+namespace GeekBrains\UnitTests\ActionTests;
 
 use GeekBrains\LevelTwo\Blog\Post;
 use GeekBrains\LevelTwo\Http\Actions\Posts\CreatePost;
@@ -132,9 +132,8 @@ class CreatePostActionTest extends TestCase
     public function testItReturnsErrResponseIfNotFoundUser(): void
     {
         $request = new Request(
-            [], [], '{"author_uuid":"855ede84-4722-4678-b8bd-4f711ffa4e25",
-                "title":"lorem",
-                "content":"content lorem"}');
+            [], [], '{"author_uuid":"855ede84-4722-4678-b8bd-4f711ffa4e25", "title":"lorem", "content":"content lorem"}'
+        );
             
         $postsRepository = $this->postRepository();
         $userRepository = $this->usersRepository([]);

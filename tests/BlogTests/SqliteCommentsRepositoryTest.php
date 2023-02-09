@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\BlogTests;
+namespace GeekBrains\UnitTests\BlogTests;
 
 use GeekBrains\LevelTwo\Users\{User, UUID};
 use GeekBrains\LevelTwo\Blog\{Post, Comment};

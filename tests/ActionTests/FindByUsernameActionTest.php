@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\ActionTests;
+namespace GeekBrains\UnitTests\ActionTests;
 
 use GeekBrains\LevelTwo\Users\Exceptions\UserNotFoundExceptions;
 use GeekBrains\LevelTwo\Users\User;
@@ -55,7 +55,7 @@ class FindByUsernameActionTest extends TestCase
     public function testItReturnsErrorResponseIfUserNotFound(): void
     {
         // Теперь запрос будет иметь параметр username
-        $request = new Request(['login' => 'Ivan'], []);
+        $request = new Request(['login' => 'Ivan'], [], "");
         // Репозиторий пользователей по-прежнему пуст
         $usersRepository = $this->usersRepository([]);
         $action = new FindByLogin($usersRepository);
@@ -74,7 +74,7 @@ class FindByUsernameActionTest extends TestCase
     public function testItReturnsSuccessfulResponse(): void
     {
 
-        $request = new Request(['login' => 'Ivan'], []);
+        $request = new Request(['login' => 'Ivan'], [], "");
         // На этот раз в репозитории есть нужный нам пользователь
         $usersRepository = $this->usersRepository([
             new User(
