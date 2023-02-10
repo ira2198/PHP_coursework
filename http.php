@@ -2,6 +2,8 @@
 
 use GeekBrains\LevelTwo\Http\Actions\Comments\CreateComments;
 use GeekBrains\LevelTwo\Http\Actions\Comments\DeleteComments;
+use GeekBrains\LevelTwo\Http\Actions\likes\CreateLikeComment;
+use GeekBrains\LevelTwo\Http\Actions\likes\CreateLikePost;
 use GeekBrains\LevelTwo\Http\Actions\Posts\CreatePost;
 use GeekBrains\LevelTwo\Http\Actions\Posts\DeletePost;
 use GeekBrains\LevelTwo\Http\Actions\Users\FindByLogin;
@@ -20,6 +22,7 @@ $request = new Request(
     file_get_contents('php://input')
 );
 
+
 try {
     $path = $request->path();
 } catch (HttpException) {
@@ -27,14 +30,12 @@ try {
     return;
 }
 
-
 try {
     $method = $request->method();
 } catch (HttpException) {
     (new ErrResponse())->send();
     return;
 }
-
 
 
 $routes = [
@@ -45,6 +46,8 @@ $routes = [
         '/user/create' => CreateUser::class,
         '/post/create' => CreatePost::class,          
         '/comment/create' => CreateComments::class,
+        '/post-like/create' => CreateLikePost::class,
+        '/comment-like/create' => CreateLikeComment::class
     ],
     'DELETE' => [
         '/post/delete' => DeletePost::class,
@@ -77,5 +80,3 @@ $response = $action->handle($request);
 }
 
 $response->send();
-
-

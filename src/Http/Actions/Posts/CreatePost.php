@@ -63,7 +63,7 @@ class CreatePost implements ActionsInterface
 
         // Возвращаем успешный ответ, содержащий UUID новой статьи
         return new SuccessFullResponse([
-        'uuid' => $request->jsonBodyField('title'),
+        'title' => $request->jsonBodyField('title'),
         ]);
     }
 

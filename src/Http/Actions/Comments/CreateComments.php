@@ -78,7 +78,7 @@ class CreateComments implements ActionsInterface
 
         // Возвращаем успешный ответ
         return new SuccessFullResponse([
-            'uuid' => $request->jsonBodyField('text'),
+            'text' => $request->jsonBodyField('text'),
             ]);
     }
 

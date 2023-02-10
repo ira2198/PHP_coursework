@@ -4,6 +4,10 @@
 use GeekBrains\LevelTwo\Container\DIContainer;
 use GeekBrains\LevelTwo\Users\Repositories\CommentsRepositories\CommentsRepositoryInterface;
 use GeekBrains\LevelTwo\Users\Repositories\CommentsRepositories\sqliteCommentsRepository;
+use GeekBrains\LevelTwo\Users\Repositories\LikesRepositories\CommentLikeRepoInterface;
+use GeekBrains\LevelTwo\Users\Repositories\LikesRepositories\PostLikeRepoInterface;
+use GeekBrains\LevelTwo\Users\Repositories\LikesRepositories\SqliteLikeCommentsRep;
+use GeekBrains\LevelTwo\Users\Repositories\LikesRepositories\SqlitePostLikeRepo;
 use GeekBrains\LevelTwo\Users\Repositories\PostsRepositories\PostRepositoryInterface;
 use GeekBrains\LevelTwo\Users\Repositories\PostsRepositories\sqlitePostsRepository;
 use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\SqliteUsersRep;
@@ -36,6 +40,16 @@ $container->bind(
     CommentsRepositoryInterface::class,
     sqliteCommentsRepository::class
 );
+// 5. репозиторий лайков
+$container->bind(
+    PostLikeRepoInterface::class,
+    SqlitePostLikeRepo::class
+);
+$container->bind(
+    CommentLikeRepoInterface::class,
+    SqliteLikeCommentsRep::class
+);
+
 
 return $container;
 
