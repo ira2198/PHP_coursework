@@ -1,2 +1,5 @@
 /vendor/
 /InMemoryUsersRep/
+/test/
+/exeptions.php/
+/HelloTest.php/
