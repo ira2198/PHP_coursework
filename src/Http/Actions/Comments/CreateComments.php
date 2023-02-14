@@ -16,15 +16,15 @@ use GeekBrains\LevelTwo\Http\ErrResponse;
 use GeekBrains\LevelTwo\Users\Exceptions\PostNotFoundException;
 use GeekBrains\LevelTwo\Http\SuccessFullResponse;
 use GeekBrains\LevelTwo\Users\UUID;
-
-
+use Psr\Log\LoggerInterface;
 
 class CreateComments implements ActionsInterface
 {
     public function __construct(
         private CommentsRepositoryInterface $commentsRepository,
         private PostRepositoryInterface $postsRepository,
-        private UsersRepositoryInterface $userRepository
+        private UsersRepositoryInterface $userRepository,
+        private LoggerInterface $logger
     )
     {        
     }
@@ -76,10 +76,12 @@ class CreateComments implements ActionsInterface
          // Сохраняем 
         $this->commentsRepository->save($comment);
 
+        $this->logger->info("comment: $newCommentUuid saved successfully in CreateComments class");
         // Возвращаем успешный ответ
         return new SuccessFullResponse([
             'text' => $request->jsonBodyField('text'),
             ]);
+       
     }
 
 }

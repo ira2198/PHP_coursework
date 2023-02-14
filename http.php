@@ -12,8 +12,11 @@ use GeekBrains\LevelTwo\Http\Request;
 use GeekBrains\LevelTwo\Http\Actions\Users\CreateUser;
 use GeekBrains\LevelTwo\Users\Exceptions\AppException;
 use GeekBrains\LevelTwo\Users\Exceptions\HttpException;
+use Psr\Log\LoggerInterface;
 
 $container = require __DIR__ . '/bootstrap.php';
+
+$logger = $container->get(LoggerInterface::class);
 
 
 $request = new Request(
@@ -25,14 +28,16 @@ $request = new Request(
 
 try {
     $path = $request->path();
-} catch (HttpException) {
+} catch (HttpException $err) {
+    $logger->warning($err->getMessage());
     (new ErrResponse())->send();
     return;
 }
 
 try {
     $method = $request->method();
-} catch (HttpException) {
+} catch (HttpException $err) {
+    $logger->warning($err->getMessage());
     (new ErrResponse())->send();
     return;
 }
@@ -55,18 +60,14 @@ $routes = [
     ]
 ];
 
-// Есть ли маршруты для методов запроса
-if (!array_key_exists($method, $routes)) {
-    (new ErrResponse('Not Found'))->send();
+// Есть ли маршруты для методов запроса или есть ли маршрут в запросе
+if (!array_key_exists($method, $routes) || !array_key_exists($path, $routes[$method])) {
+
+    $logger->notice('Not Found');
+   (new ErrResponse('Not Found'))->send();
     return;
 }
 
-// А есть ли этот маршрут в запросе
-
-if (!array_key_exists($path, $routes[$method])) {
-    (new ErrResponse('Not Found'))->send();
-    return;
-}
 
 $actionClassName = $routes[$method][$path];
 $action = $container->get($actionClassName);
@@ -76,7 +77,10 @@ try {
 $response = $action->handle($request);
 
 } catch (AppException $err) {
+    
+    $logger->error($err->getMessage(), ['exeption' => $err]);
     (new ErrResponse($err->getMessage()))->send();
+    return;
 }
 
 $response->send();

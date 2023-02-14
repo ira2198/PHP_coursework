@@ -7,7 +7,7 @@ use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\SqliteUsersRep;
 use GeekBrains\LevelTwo\Users\Exceptions\UserNotFoundExceptions;
 
 use GeekBrains\LevelTwo\Users\{User, UUID};
-
+use GeekBrains\UnitTests\DummyLogger;
 use PHPUnit\Framework\TestCase;
 use PDO;
 use PDOStatement;
@@ -26,12 +26,14 @@ class SqliteUsersRepTest extends TestCase
         $connectionMock->method('prepare')->willReturn($statementStub);
 
 
-        $repository = new SqliteUsersRep($connectionMock);
+        $repository = new SqliteUsersRep($connectionMock, new DummyLogger);
         $this->expectException(UserNotFoundExceptions::class);
         $this->expectExceptionMessage('Cannot find user: Ivan');
 
         $repository->getByUserLogin('Ivan');
     }
+
+
     // Тест, проверяющий, что репозиторий сохраняет данные в БД
     public function testItSavesUserToDatabase(): void
     {
@@ -56,7 +58,7 @@ class SqliteUsersRepTest extends TestCase
         $connectionStub->method('prepare')->willReturn($statementMock);
 
     // 1. Передаём в репозиторий стаб подключения
-        $repository = new SqliteUsersRep($connectionStub);
+        $repository = new SqliteUsersRep($connectionStub, new DummyLogger);
 
     // Вызываем метод сохранения пользователя
         $repository->save(

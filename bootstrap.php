@@ -12,19 +12,53 @@ use GeekBrains\LevelTwo\Users\Repositories\PostsRepositories\PostRepositoryInter
 use GeekBrains\LevelTwo\Users\Repositories\PostsRepositories\sqlitePostsRepository;
 use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\SqliteUsersRep;
 use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\UsersRepositoryInterface;
-
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
+use Dotenv\Dotenv;
+use GeekBrains\LevelTwo\Http\Auth\IdentificationInterface;
+use GeekBrains\LevelTwo\Http\Auth\JsonBodyUuidIdentification;
+use GeekBrains\LevelTwo\Http\Auth\JsonByLoginIdentification;
 
 require_once __DIR__ . '/vendor/autoload.php';
+
+// для чтения .env
+Dotenv::createImmutable(__DIR__)->safeLoad();
 
 // Создаём объект контейнера ..
 $container = new DIContainer();
 
+
 // 1. подключаем его к БД
 $container->bind(
     PDO::class,
-    new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
+    new PDO('sqlite:' . __DIR__ . '/' . $_ENV['SQLITE_DB_PATH']) // читаем базу через env
+    // new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
 );
 
+//Сoздаем и настраиваем логгер
+
+$logger = (new Logger('blog')); //blog - произвольное имя логгера
+
+if ('yes' === $_ENV['LOG_TO_FILES']) {
+    //записи сохраняем в файл
+    $logger->pushHandler(new StreamHandler(__DIR__ . '/logs/blog.log'))
+    // Расширим
+    ->pushHandler(new StreamHandler(__DIR__ . '/logs/blog.error.log',
+        level: Logger::ERROR, //error и выше
+        bubble: false // cобытие не будет всплывать
+));
+}
+
+if ('yes' === $_ENV['LOG_TO_CONSOLE']) {
+    $logger->pushHandler(new StreamHandler("php://stdout")) ; // сыпем в консоль
+}
+
+
+$container->bind(
+    LoggerInterface::class,
+    $logger
+);
 // 2. репозиторий статей
 $container->bind(
     PostRepositoryInterface::class,
@@ -49,8 +83,12 @@ $container->bind(
     CommentLikeRepoInterface::class,
     SqliteLikeCommentsRep::class
 );
+// Идентификация
+$container->bind(
+    IdentificationInterface::class,
+    JsonByLoginIdentification::class
+);
 
 
 return $container;
 
-    

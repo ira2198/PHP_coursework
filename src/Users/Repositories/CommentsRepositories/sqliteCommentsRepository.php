@@ -10,11 +10,14 @@ use GeekBrains\LevelTwo\Users\Repositories\PostsRepositories\sqlitePostsReposito
 use GeekBrains\LevelTwo\Users\Exceptions\CommentNotFoundException;
 
 use PDO;
+use Psr\Log\LoggerInterface;
+
 class sqliteCommentsRepository implements CommentsRepositoryInterface 
 {
     
     public function __construct(
-        private PDO $connectDB
+        private PDO $connectDB,
+        private LoggerInterface $logger
     )
     {        
     }
@@ -30,6 +33,7 @@ class sqliteCommentsRepository implements CommentsRepositoryInterface
                 ':article_uuid' => $comment -> getArticleId ()->getUuid(),
                 ':text' => $comment-> getText()
              ]);
+             $this->logger->info("The comment:{$comment->getText()} was created in sqliteCommentsRepository class");    
     }
 
 
@@ -40,7 +44,6 @@ class sqliteCommentsRepository implements CommentsRepositoryInterface
         );
         $statement-> execute([':uuid' => (string)$uuid]);
 
-       print_r($statement);
         return $this->getComment($statement, $uuid);
        
     }
@@ -52,13 +55,14 @@ class sqliteCommentsRepository implements CommentsRepositoryInterface
         if ($result === false) {
             throw new CommentNotFoundException(  
                 "Cannot find post: $commentUuid");
+                $this->logger->warning("Cannot find post: $commentUuid in sqliteCommentsRepository class"); 
         }
 
              
-        $userRepository = new SqliteUsersRep($this->connectDB);
+        $userRepository = new SqliteUsersRep($this->connectDB, $this->logger);
         $user = $userRepository->get(new UUID($result['author_uuid']));
 
-        $postRepository = new sqlitePostsRepository($this->connectDB);
+        $postRepository = new sqlitePostsRepository($this->connectDB, $this->logger);
         $post = $postRepository->get(new UUID($result['article_uuid']));
 
             
@@ -68,7 +72,10 @@ class sqliteCommentsRepository implements CommentsRepositoryInterface
             $post,
             $result['text']
         );
-    }  
+        
+   }     
+    
+
     public function delete(UUID $uuid)
     {
         $statement= $this->connectDB->prepare(
@@ -78,8 +85,6 @@ class sqliteCommentsRepository implements CommentsRepositoryInterface
         $statement->execute([
             ':uuid' => $uuid
         ]);
-
+        $this->logger->info("The comment: $uuid was deleted in sqliteCommentsRepository class"); 
     }
-
-
 }

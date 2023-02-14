@@ -11,11 +11,14 @@ use GeekBrains\LevelTwo\Users\Exceptions\HttpException;
 use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\UsersRepositoryInterface;
 use GeekBrains\LevelTwo\Users\UUID;
 use GeekBrains\LevelTwo\Users\User;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 class CreateUser implements ActionsInterface
 {
     public function __construct(
-        private UsersRepositoryInterface $userRepository
+        private UsersRepositoryInterface $userRepository,
+        private LoggerInterface $logger
     )
     {        
     }
@@ -40,5 +43,7 @@ class CreateUser implements ActionsInterface
         return new SuccessFullResponse([
             'uuid' => (string)$newUserUuid
         ]);
+
+        $this->logger->info("User: {$request->jsonBodyField('login')} created in CreateUser class");
     }
 }

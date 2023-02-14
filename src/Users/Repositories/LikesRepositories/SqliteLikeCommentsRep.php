@@ -7,11 +7,13 @@ use GeekBrains\LevelTwo\Users\Exceptions\LikeAlreadyExists;
 use GeekBrains\LevelTwo\Users\Exceptions\LikeNotFoundException;
 use GeekBrains\LevelTwo\Users\UUID;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 class SqliteLikeCommentsRep implements CommentLikeRepoInterface
 {
     public function __construct(
-        private PDO $connectDB
+        private PDO $connectDB,
+        private LoggerInterface $logger
     ) 
     {        
     }  
@@ -27,6 +29,7 @@ class SqliteLikeCommentsRep implements CommentLikeRepoInterface
                 ':comment_uuid' => $like-> getCommentLike()->getUuid()
                 ,
             ]);
+            $this->logger->info("like to comment added");
     }
 
     public function getLikeComment(UUID $uuid): LikeComment
@@ -72,8 +75,7 @@ class SqliteLikeCommentsRep implements CommentLikeRepoInterface
             throw new LikeAlreadyExists(
                 'The users like for this text already exists'
             );
+        $this->logger->warning("The users like for this text already exists");
         }
-
-    }
-   
+    }   
 }

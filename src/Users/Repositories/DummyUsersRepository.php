@@ -1,5 +1,5 @@
 <?php
-namespace GeekBrains\Users\Repositories\UsersRepositories;
+namespace GeekBrains\LevelTwo\Users\Repositories;
 
 use GeekBrains\LevelTwo\Users\{User, UUID};
 use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\UsersRepositoryInterface;
@@ -24,6 +24,6 @@ public function getByUserLogin(string $login): User
 // Нас интересует реализация только этого метода
 // Для нашего теста не важно, что это будет за пользователь,
 // поэтому возвращаем совершенно произвольного
-return new User(UUID::random(), "user123", "first", "last");
+return new User(UUID::random(), "Ivan", "Ivan", "Nikitin");
 }
 }
