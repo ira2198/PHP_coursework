@@ -17,13 +17,15 @@ use GeekBrains\LevelTwo\Users\Repositories\LikesRepositories\CommentLikeRepoInte
 use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\UsersRepositoryInterface;
 use GeekBrains\LevelTwo\Users\UUID;
 use InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 
 class CreateLikeComment implements ActionsInterface
 {
     public function __construct(
         private UsersRepositoryInterface $usersRepository,
         private CommentsRepositoryInterface $commentsRepository,
-        private CommentLikeRepoInterface $likeRepository
+        private CommentLikeRepoInterface $likeRepository,
+        private LoggerInterface $logger
     )
     {        
     }
@@ -68,7 +70,8 @@ class CreateLikeComment implements ActionsInterface
         }
 
         $this->likeRepository->save($like);
-
+        
+        $this->logger->info("like the comment: $newLikeCommentUuid");
         return new SuccessFullResponse([
             'uuid' => (string)$newLikeCommentUuid
             ]);

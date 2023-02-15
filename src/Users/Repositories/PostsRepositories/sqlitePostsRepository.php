@@ -7,15 +7,15 @@ use GeekBrains\LevelTwo\Users\UUID;
 use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\SqliteUsersRep;
 use GeekBrains\LevelTwo\Users\Exceptions\PostNotFoundException;
 use PDO;
-
-
+use Psr\Log\LoggerInterface;
 
 class sqlitePostsRepository implements PostRepositoryInterface 
 {
 
 
     public function __construct(
-        private PDO $connectDB
+        private PDO $connectDB,
+        private LoggerInterface $logger
     ) 
     {        
     }   
@@ -31,6 +31,8 @@ class sqlitePostsRepository implements PostRepositoryInterface
                 ':title' => $post -> getTitle (),
                 ':content' => $post-> getContent()
              ]);
+
+            $this->logger->info("The post: $post was created in sqlitePostsRepository class");
     }
 
     public function get(UUID $uuid): Post
@@ -52,9 +54,11 @@ class sqlitePostsRepository implements PostRepositoryInterface
         if ($result === false) {
             throw new PostNotFoundException(  
                 "Cannot find post: $postUuid");
+
+                $this->logger->warning("Cannot find post: $postUuid in sqlitePostsRepository class");
         }
 
-        $userRepository = new SqliteUsersRep($this->connectDB);
+        $userRepository = new SqliteUsersRep($this->connectDB, $this->logger);
         $user = $userRepository->get(new UUID($result['author_uuid']));
 
         return new Post(                            
@@ -74,6 +78,7 @@ class sqlitePostsRepository implements PostRepositoryInterface
         $statement->execute([
             ':uuid' => $uuid
         ]);
+        $this->logger->info("The post: $uuid was deleted in sqlitePostsRepository class");  
 
     }
 

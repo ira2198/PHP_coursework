@@ -10,11 +10,13 @@ use GeekBrains\LevelTwo\Http\SuccessFullResponse;
 use GeekBrains\LevelTwo\Users\Exceptions\CommentNotFoundException;
 use GeekBrains\LevelTwo\Users\Repositories\CommentsRepositories\CommentsRepositoryInterface;
 use GeekBrains\LevelTwo\Users\UUID;
+use Psr\Log\LoggerInterface;
 
 class DeleteComments implements ActionsInterface
 {
     public function __construct(
-        private CommentsRepositoryInterface $commentsRepository
+        private CommentsRepositoryInterface $commentsRepository,
+        private LoggerInterface $logger
     )
     {        
     }
@@ -33,7 +35,7 @@ class DeleteComments implements ActionsInterface
         return new SuccessFullResponse([
             'uuid'=>$commentUuid
         ]);
-        
+        $this->logger->info("comment: $commentUuid deleted successfully in CreateComments class");
     }
 
 }

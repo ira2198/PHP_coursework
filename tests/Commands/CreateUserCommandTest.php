@@ -5,11 +5,12 @@ namespace GeekBrains\UnitTests\Commands;
 use GeekBrains\LevelTwo\Users\Commands\CreateUserCommand;
 use GeekBrains\LevelTwo\Users\Commands\Arguments;
 use GeekBrains\LevelTwo\Users\Exceptions\CommandException;
-use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\UsersRepositoryInterface;
-use GeekBrains\Users\Repositories\UsersRepositories\DummyUsersRepository;
 use GeekBrains\LevelTwo\Users\{User, UUID};
 use GeekBrains\LevelTwo\Users\Exceptions\UserNotFoundExceptions;
 use GeekBrains\LevelTwo\Users\Exceptions\ArgumentsException;
+use GeekBrains\LevelTwo\Users\Repositories\DummyUsersRepository;
+use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\UsersRepositoryInterface;
+use GeekBrains\UnitTests\DummyLogger;
 
 use PHPUnit\Framework\TestCase;
 
@@ -19,12 +20,12 @@ class CreateUserCommandTest extends TestCase
 // Тест на исключения
     public function testItThrowsAnExceptionWhenUserAlreadyExists(): void
     {
-        $command = new CreateUserCommand(new DummyUsersRepository());
+        $command = new CreateUserCommand(new DummyUsersRepository(), new DummyLogger);
         // Описываем тип ожидаемого исключения
         $this->expectException(CommandException::class);
 
         // и его сообщение
-        $this->expectExceptionMessage('User already exists: User');
+        $this->expectExceptionMessage('User already exists: Ivan');
 
         // Запускаем команду с аргументами
         $command->handle(new Arguments(['login' => 'Ivan']));
@@ -53,13 +54,13 @@ class CreateUserCommandTest extends TestCase
         };
 
     // Передаём объект анонимного класса  в качестве реализации UsersRepositoryInterface    
-        $command = new CreateUserCommand($usersRepository);
+        $command = new CreateUserCommand($usersRepository, new DummyLogger);
 
     // Ожидаем, что будет брошено исключение
         $this->expectException(ArgumentsException::class);
-        $this->expectExceptionMessage('No such argument: Ivan');
+        $this->expectExceptionMessage('No such argument: user_name');
     // Запускаем команду
-        $command->handle(new Arguments(['user_name' => 'Ivan']));
+        $command->handle(new Arguments(['login' => 'Ivan']));
     }
 
 
@@ -67,13 +68,13 @@ class CreateUserCommandTest extends TestCase
     public function testItRequiresSurname(): void
       {
   // Передаём в конструктор команды объект, возвращаемый нашей функцией
-          $command = new CreateUserCommand($this->makeUsersRepository());
+          $command = new CreateUserCommand($this->makeUsersRepository(), new DummyLogger);
           $this->expectException(ArgumentsException::class);
           $this->expectExceptionMessage('No such argument: user_surname');
           $command->handle(new Arguments([
               'login' => 'Ivan',
    // Нам нужно передать имя пользователя, чтобы дойти до проверки наличия фамилии
-              'user_surname' => 'Nikitin',
+              'user_name' => 'Ivan',
           ]));
       }
    
@@ -129,7 +130,7 @@ class CreateUserCommandTest extends TestCase
             }
         };
 
-        $command = new CreateUserCommand($usersRepository);
+        $command = new CreateUserCommand($usersRepository, new DummyLogger);
 
         // Запускаем команду
         $command->handle(new Arguments([

@@ -1,18 +1,20 @@
 <?php
 
-namespace GeekBrains\LevelTwo\Users\Repositories\LikesRepositories;
+namespace GeekBrains\LevelTwo\Users\Repositories\LikesRepositories; 
 
-use GeekBrains\LevelTwo\Blog\Likes\Likes;
+
 use GeekBrains\LevelTwo\Blog\Likes\LikePost;
 use GeekBrains\LevelTwo\Users\Exceptions\LikeAlreadyExists;
 use GeekBrains\LevelTwo\Users\Exceptions\LikeNotFoundException;
 use GeekBrains\LevelTwo\Users\UUID;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 class SqlitePostLikeRepo implements PostLikeRepoInterface
 {
     public function __construct(
-        private PDO $connectDB
+        private PDO $connectDB,
+        private LoggerInterface $logger
     ) 
     {        
     }   
@@ -26,8 +28,8 @@ class SqlitePostLikeRepo implements PostLikeRepoInterface
                 ':uuid' => $like->getUuid(),
                 ':author_uuid' => $like-> getAuthorUuid()->getUuid(),
                 ':article_uuid' => $like-> getPostLike()->getUuid()
-                ,
             ]);
+            $this->logger->info("the user {$like-> getAuthorUuid()->getUuid()} put a like");
     }
 
     public function getLikePost(UUID $uuid): LikePost
@@ -36,6 +38,7 @@ class SqlitePostLikeRepo implements PostLikeRepoInterface
             'SELECT * FROM post_likes WHERE uuid = :uuid'
         );
         $statement->execute([':uuid' => (string)$uuid]);
+       
         return $this->getLike($statement, $uuid);
     }
 
@@ -47,8 +50,9 @@ class SqlitePostLikeRepo implements PostLikeRepoInterface
         if ($result === false) {
             throw new LikeNotFoundException(  
                 "Cannot find like: $uuid");
+                $this->logger->warning("Cannot find like: $uuid");
         }
-
+        
         return new LikePost(                            
             new UUID($result['uuid']),
             $result['author_uuid'],
@@ -74,10 +78,7 @@ class SqlitePostLikeRepo implements PostLikeRepoInterface
             throw new LikeAlreadyExists(
                 'The users like for this text already exists'
             );
+            $this->logger->warning('The users like for this text already exists');
         }
-
-    }
-
-
-   
+    }   
 }

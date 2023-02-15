@@ -2,7 +2,7 @@
 
 namespace GeekBrains\UnitTests\Container;
 
-// Класс, типа заглушка
+// Класс заглушка
 
 class SomeClassWithoutDependencies
 {

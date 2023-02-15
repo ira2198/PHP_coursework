@@ -5,7 +5,6 @@ namespace GeekBrains\UnitTests\Container;
 use GeekBrains\LevelTwo\Container\DIContainer;
 use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\UsersRepositoryInterface;
 use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\InMemoryUsersRep;
-use GeekBrains\LevelTwo\Copntainer\SomeClassWithoutDependencies;
 use GeekBrains\LevelTwo\Users\Exceptions\ContainerNotFoundException;
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +15,7 @@ class DIContainerTest extends TestCase
         $container = new DIContainer();
         // ожидаемые исключения
         $this->expectException(ContainerNotFoundException::class);
-        $this->expectExceptionMessage('Cannot resolve type: GeekBrains\UnitTests\tests\SomeClass');
+        $this->expectExceptionMessage('Cannot resolve type: GeekBrains\UnitTests\Container\SomeClass');
 
         // Пытаемся получить обЪект несуществующего класса
         $container->get(SomeClass::class);

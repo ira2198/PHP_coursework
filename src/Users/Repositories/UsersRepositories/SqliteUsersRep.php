@@ -6,12 +6,13 @@ use GeekBrains\LevelTwo\Users\Exceptions\UserNotFoundExceptions;
 use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\UsersRepositoryInterface;
 use PDO;
 use PDOStatement;
-
+use Psr\Log\LoggerInterface;
 
 class SqliteUsersRep implements UsersRepositoryInterface
 { 
        public function __construct(
-        private PDO $connectDB
+        private PDO $connectDB,
+        private LoggerInterface $logger
     ) {        
     }
 
@@ -25,7 +26,9 @@ class SqliteUsersRep implements UsersRepositoryInterface
             ':login' => $user-> getLogin(),
             ':user_name' => $user->getUserName(),
             ':user_surname' => $user->getUserSurname()      
-        ]);    
+        ]);  
+        
+        $this->logger->info("User created: {$user->getUuid()} in SqliteUsersRep");
     }
 
     public function get(UUID $uuid): User
@@ -60,6 +63,7 @@ class SqliteUsersRep implements UsersRepositoryInterface
             throw new UserNotFoundExceptions(
                 "Cannot find user: $errorString"
             );
+            $this->logger->warning("Cannot find user: $errorString in SqliteUsersRep");
         }
         return new User(
             new UUID($result['uuid']), 

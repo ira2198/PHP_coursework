@@ -11,12 +11,14 @@ use GeekBrains\LevelTwo\Http\SuccessFullResponse;
 use GeekBrains\LevelTwo\Users\Exceptions\PostNotFoundException;
 use GeekBrains\LevelTwo\Users\Repositories\PostsRepositories\PostRepositoryInterface;
 use GeekBrains\LevelTwo\Users\UUID;
+use Psr\Log\LoggerInterface;
 
 class DeletePost implements ActionsInterface
 {
     public function __construct(
-        private PostRepositoryInterface $postRepository
+        private PostRepositoryInterface $postRepository,
 
+        private LoggerInterface $logger
     )
     {        
     }
@@ -31,6 +33,8 @@ class DeletePost implements ActionsInterface
         } 
 
         $this->postRepository->delete(new UUID($postUuid));
+
+        $this->logger->info("Post: $postUuid was successfully deleted in DeletePost");
 
         return new SuccessFullResponse([
             'uuid'=>$postUuid

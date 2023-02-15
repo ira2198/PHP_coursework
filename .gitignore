@@ -1,5 +1,9 @@
 /vendor/
 /InMemoryUsersRep/
+<<<<<<< HEAD
 /test/
 /exeptions.php/
 /HelloTest.php/
+=======
+/logs/
+>>>>>>> hw6
