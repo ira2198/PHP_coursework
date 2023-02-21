@@ -21,9 +21,10 @@ throw new UserNotFoundExceptions("Not found");
 }
 public function getByUserLogin(string $login): User
 {
+    
 // Нас интересует реализация только этого метода
 // Для нашего теста не важно, что это будет за пользователь,
 // поэтому возвращаем совершенно произвольного
-return new User(UUID::random(), "Ivan", "Ivan", "Nikitin");
+return new User(UUID::random(), "Ivan", "Ivan", "Nikitin", "123");
 }
 }

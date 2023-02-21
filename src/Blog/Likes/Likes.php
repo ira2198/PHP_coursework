@@ -2,7 +2,7 @@
 
 namespace GeekBrains\LevelTwo\Blog\Likes;
 
-use GeekBrains\LevelTwo\Blog\Post;
+
 use GeekBrains\LevelTwo\Users\User;
 use GeekBrains\LevelTwo\Users\UUID;
 

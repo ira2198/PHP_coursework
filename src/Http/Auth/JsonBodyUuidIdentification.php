@@ -15,7 +15,7 @@ use InvalidArgumentException;
 
 class JsonBodyUuidIdentification implements IdentificationInterface 
 {
-
+    
     public function __construct(
         private UsersRepositoryInterface $usersRepository
     )
@@ -33,7 +33,7 @@ class JsonBodyUuidIdentification implements IdentificationInterface
         }
 
         // Ищем пользователя в репозитории
-         try {
+        try {
             return $this->usersRepository->get($authorUuid);
         } catch (UserNotFoundExceptions $err) {
             return new AuthExceptions($err->getMessage());

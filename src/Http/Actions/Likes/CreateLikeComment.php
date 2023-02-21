@@ -4,10 +4,12 @@ namespace GeekBrains\LevelTwo\Http\Actions\likes;
 
 use GeekBrains\LevelTwo\Blog\Likes\LikeComment;
 use GeekBrains\LevelTwo\Http\Actions\ActionsInterface;
+use GeekBrains\LevelTwo\Http\Auth\TokenAuthIdenticationInterface;
 use GeekBrains\LevelTwo\Http\ErrResponse;
 use GeekBrains\LevelTwo\Http\Request;
 use GeekBrains\LevelTwo\Http\Response;
 use GeekBrains\LevelTwo\Http\SuccessFullResponse;
+use GeekBrains\LevelTwo\Users\Exceptions\AuthExceptions;
 use GeekBrains\LevelTwo\Users\Exceptions\HttpException;
 use GeekBrains\LevelTwo\Users\Exceptions\LikeAlreadyExists;
 use GeekBrains\LevelTwo\Users\Exceptions\PostNotFoundException;
@@ -22,7 +24,7 @@ use Psr\Log\LoggerInterface;
 class CreateLikeComment implements ActionsInterface
 {
     public function __construct(
-        private UsersRepositoryInterface $usersRepository,
+        private TokenAuthIdenticationInterface $identification,
         private CommentsRepositoryInterface $commentsRepository,
         private CommentLikeRepoInterface $likeRepository,
         private LoggerInterface $logger
@@ -32,24 +34,27 @@ class CreateLikeComment implements ActionsInterface
 
     public function handle(Request $request): Response
     {
+
+        
         try {
-            $authorUuid = new UUID($request->jsonBodyField('author_uuid'));
+            $user = $this->identification->author($request);
+            } catch (AuthExceptions $err) {
+                return new ErrResponse($err->getMessage());
+            }
+
+
+        try {
             $commentUuid = new UUID($request->jsonBodyField('comment_uuid'));
         } catch (HttpException | InvalidArgumentException $err) {
             return new ErrResponse($err->getMessage());
         }
 
         try {
-            $this->likeRepository->checkUserLikeForCommentExists($authorUuid, $commentUuid);
+            $this->likeRepository->checkUserLikeForCommentExists($user->getUuid(), $commentUuid);
         } catch (LikeAlreadyExists $err) {
             return new ErrResponse($err->getMessage());
         }
 
-        try {
-            $user = $this->usersRepository->get($authorUuid);
-        } catch (UserNotFoundExceptions $err) {
-            return new ErrResponse($err->getMessage());
-        }
 
         try {
             $comment = $this->commentsRepository->get($commentUuid);

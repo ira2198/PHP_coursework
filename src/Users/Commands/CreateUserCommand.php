@@ -25,6 +25,7 @@ class CreateUserCommand
         $this->logger->info("Create user command started");
 
         $login = $arrArgv->get('login');
+             
 
         if ($this->userExists($login)) {
             // Логируем сообщение с уровнем WARNING
@@ -32,14 +33,16 @@ class CreateUserCommand
             throw new CommandException("User already exists: $login");
         }
 
-        $uuid = UUID::random();
-        $this->userRep->save(new User(
-            $uuid, 
-            $login,
+        $user = User::createFrom(
+            $login, 
             $arrArgv->get('user_name'), 
-            $arrArgv->get('user_surname')
-        ));    
-        $this->logger->info("User created: $uuid");    
+            $arrArgv->get('user_surname'), 
+            $arrArgv->get('password')
+        );
+
+        $this->userRep->save($user);
+           
+        $this->logger->info("User created:" .  $user->getLogin());    
     }
 
 

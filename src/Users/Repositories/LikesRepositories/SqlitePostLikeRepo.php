@@ -10,7 +10,7 @@ use GeekBrains\LevelTwo\Users\UUID;
 use PDO;
 use Psr\Log\LoggerInterface;
 
-class SqlitePostLikeRepo implements PostLikeRepoInterface
+class SqlitePostLikeRepo implements PostLikeRepoInterface 
 {
     public function __construct(
         private PDO $connectDB,

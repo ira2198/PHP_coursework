@@ -28,9 +28,26 @@ class CreateUserCommandTest extends TestCase
         $this->expectExceptionMessage('User already exists: Ivan');
 
         // Запускаем команду с аргументами
-        $command->handle(new Arguments(['login' => 'Ivan']));
+        $command->handle(new Arguments(['login' => 'Ivan', 'password' => '123']));
     }
 
+
+    public function testItRequiresPassword(): void
+    {
+        $command = new CreateUserCommand(
+            $this->makeUsersRepository(),
+            new DummyLogger()
+        );
+
+        $this->expectException(ArgumentsException::class);
+        $this->expectExceptionMessage('No such argument: password');
+
+        $command->handle(new Arguments([
+            'login' => 'Ivan',
+            'user_name' => 'Ivan',
+            'user_surname' => 'Nikitin'            
+           ]));
+    }
 
 
     // Тест проверяет, что команда действительно требует имя пользователя
@@ -60,7 +77,7 @@ class CreateUserCommandTest extends TestCase
         $this->expectException(ArgumentsException::class);
         $this->expectExceptionMessage('No such argument: user_name');
     // Запускаем команду
-        $command->handle(new Arguments(['login' => 'Ivan']));
+        $command->handle(new Arguments(['login' => 'Ivan', 'password' => '123']));
     }
 
 
@@ -75,6 +92,7 @@ class CreateUserCommandTest extends TestCase
               'login' => 'Ivan',
    // Нам нужно передать имя пользователя, чтобы дойти до проверки наличия фамилии
               'user_name' => 'Ivan',
+              'password' => '123'
           ]));
       }
    
@@ -137,10 +155,10 @@ class CreateUserCommandTest extends TestCase
             'login' => 'Ivan',
             'user_name' => 'Ivan',
             'user_surname' => 'Nikitin',
+            'password' => '123'
         ]));
 
         $this->assertTrue($usersRepository->wasCalled());
-    }
-  
+    }  
 }
         

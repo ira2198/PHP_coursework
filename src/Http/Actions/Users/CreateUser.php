@@ -26,13 +26,11 @@ class CreateUser implements ActionsInterface
     public function handle(Request $request): Response
     {
         try {
-            $newUserUuid = UUID::random();
-
-            $user = new User(
-                $newUserUuid,
+            $user = User::createFrom(
                 $request->jsonBodyField('login'),
                 $request->jsonBodyField('user_name'),
-                $request->jsonBodyField('user_surname')
+                $request->jsonBodyField('user_surname'),
+                $request->jsonBodyField('password')
             );
         } catch (HttpException $err) {
             return new ErrResponse($err->getMessage());
@@ -41,7 +39,7 @@ class CreateUser implements ActionsInterface
         $this->userRepository->save($user);
 
         return new SuccessFullResponse([
-            'uuid' => (string)$newUserUuid
+            'Создан пользователь' => $request->jsonBodyField('login')
         ]);
 
         $this->logger->info("User: {$request->jsonBodyField('login')} created in CreateUser class");

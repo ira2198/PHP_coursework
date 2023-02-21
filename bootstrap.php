@@ -16,9 +16,16 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Dotenv\Dotenv;
+use GeekBrains\LevelTwo\Http\Auth\AuthenticationInterface;
+use GeekBrains\LevelTwo\Http\Auth\BearerTokenAuthentication;
 use GeekBrains\LevelTwo\Http\Auth\IdentificationInterface;
 use GeekBrains\LevelTwo\Http\Auth\JsonBodyUuidIdentification;
 use GeekBrains\LevelTwo\Http\Auth\JsonByLoginIdentification;
+use GeekBrains\LevelTwo\Http\Auth\PasswordAuthentication;
+use GeekBrains\LevelTwo\Http\Auth\PasswordAuthenticationInterface;
+use GeekBrains\LevelTwo\Http\Auth\TokenAuthIdenticationInterface;
+use GeekBrains\LevelTwo\Users\Repositories\TokenRepository\AuthTokenRepoInterface;
+use GeekBrains\LevelTwo\Users\Repositories\TokenRepository\sqliteAuthTokenRepository;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -74,6 +81,7 @@ $container->bind(
     CommentsRepositoryInterface::class,
     sqliteCommentsRepository::class
 );
+
 // 5. репозиторий лайков
 $container->bind(
     PostLikeRepoInterface::class,
@@ -83,11 +91,31 @@ $container->bind(
     CommentLikeRepoInterface::class,
     SqliteLikeCommentsRep::class
 );
-// Идентификация
+
+// Идентификация, аутентификация
+$container->bind(
+    AuthenticationInterface::class,
+    PasswordAuthentication::class
+);
 $container->bind(
     IdentificationInterface::class,
     JsonByLoginIdentification::class
 );
+
+$container->bind(
+    PasswordAuthenticationInterface::class,
+    PasswordAuthentication::class
+); 
+$container->bind(
+    AuthTokenRepoInterface::class,
+    sqliteAuthTokenRepository::class
+);
+
+$container->bind(
+    TokenAuthIdenticationInterface::class,
+    BearerTokenAuthentication::class
+);
+
 
 
 return $container;

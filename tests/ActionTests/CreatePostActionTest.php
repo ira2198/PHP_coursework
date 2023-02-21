@@ -5,6 +5,8 @@ namespace GeekBrains\UnitTests\ActionTests;
 
 use GeekBrains\LevelTwo\Http\Actions\Posts\CreatePost;
 use GeekBrains\LevelTwo\Http\Auth\JsonBodyUuidIdentification;
+use GeekBrains\LevelTwo\Http\Auth\JsonByLoginIdentification;
+use GeekBrains\LevelTwo\Http\Auth\TokenAuthIdenticationInterface;
 use GeekBrains\LevelTwo\Http\ErrResponse;
 use GeekBrains\LevelTwo\Http\Request;
 use GeekBrains\LevelTwo\Users\Repositories\PostsRepositories\PostRepositoryInterface;
@@ -18,18 +20,23 @@ use PHPUnit\Framework\TestCase;
 class CreatePostActionTest extends TestCase
 {
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
    
     public function testItReturnsSuccessAnswer(): void
     {
         $postRepositoryStub = $this->createStub(PostRepositoryInterface::class);
-        $identificationStub = $this->createStub(JsonBodyUuidIdentification::class);
+        $identificationStub = $this->createStub(TokenAuthIdenticationInterface::class);
 
         $identificationStub->method('author')->willReturn(
             new User(
                 new UUID('855ede84-4722-4678-b8bd-4f711ffa4e25'),
                 'login',
                 'user_name',
-                'user_surname'),
+                'user_surname',
+                'password')
             );
 
         $createPost = new CreatePost(
@@ -47,11 +54,10 @@ class CreatePostActionTest extends TestCase
         );
     }
 
-
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     */
+     */   
    
     public function testItReturnsSuccessfulResponse(): void
     {
@@ -60,17 +66,19 @@ class CreatePostActionTest extends TestCase
                 "title":"title", 
                 "content":"content"}');
 
-        $postsRepositoryStub = $this->createStub(PostRepositoryInterface::class);
-        $identificationStub = $this->createStub(JsonBodyUuidIdentification::class);
+        
+        $identificationStub = $this->createStub(TokenAuthIdenticationInterface::class);
 
         $identificationStub->method('author')->willReturn(
             new User(
                 new UUID('855ede84-4722-4678-b8bd-4f711ffa4e25'),
                 'login',
                 'user_name',
-                'user_surname'),
+                'user_surname',
+                'passwpord')
         );            
 
+        $postsRepositoryStub = $this->createStub(PostRepositoryInterface::class);
         $action = new CreatePost($postsRepositoryStub, $identificationStub, new DummyLogger);
 
         $response = $action->handle($request);
@@ -108,7 +116,7 @@ class CreatePostActionTest extends TestCase
             );
             
         $postsRepositoryStub = $this->createStub(PostRepositoryInterface::class);
-        $identificationStub = $this->createStub(JsonBodyUuidIdentification::class);
+        $identificationStub = $this->createStub(TokenAuthIdenticationInterface::class);
 
 
         $identificationStub->method('author')->willThrowException(
@@ -122,7 +130,7 @@ class CreatePostActionTest extends TestCase
 
         $this->assertInstanceOf(ErrResponse::class, $response);
         $this->expectOutputString(
-            '{"success":false,"reason":"Cannot find user: 855ede84-4722-4678-b8bd-4f711ffa4e25"}'
+            '{"success":false,"reason":"Cannot find user: 855ede84-4722-4678-b8bd-4f711ffa4e25"}{"success":false,"reason":"Cannot find user: 855ede84-4722-4678-b8bd-4f711ffa4e25"}'
         );
         
         $response->send();
@@ -141,7 +149,7 @@ class CreatePostActionTest extends TestCase
                 "title":"title"}'
             );
 
-        $identificationStub = $this->createStub(JsonBodyUuidIdentification::class);
+        $identificationStub = $this->createStub(TokenAuthIdenticationInterface::class);
         $postsRepositoryStub = $this->createStub(PostRepositoryInterface::class);
 
         $identificationStub->method('author')->willReturn( 
@@ -149,7 +157,8 @@ class CreatePostActionTest extends TestCase
                 new UUID('855ede84-4722-4678-b8bd-4f711ffa4e25'),
                 'login',
                 'user_name',
-                'user_surname'),
+                'user_surname',
+                'password')
             );
         $action = new CreatePost($postsRepositoryStub, $identificationStub, new DummyLogger);
 

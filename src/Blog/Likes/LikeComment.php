@@ -7,13 +7,12 @@ use GeekBrains\LevelTwo\Users\User;
 use GeekBrains\LevelTwo\Users\UUID;
 
 class LikeComment extends Likes
-{
-    private Comment $commentLike;
+{   
 
-    public function __construct(UUID $uuid, User $authorUuid, Comment $commentLike)
+    public function __construct(UUID $uuid, User $authorUuid, private Comment $commentLike)
     {
         parent::__construct($uuid, $authorUuid);
-        $this->$commentLike = $commentLike;
+        
     }
 
     public function getCommentLike(): Comment

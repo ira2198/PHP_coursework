@@ -4,6 +4,7 @@ namespace GeekBrains\LevelTwo\Http\Actions\Comments;
 
 use GeekBrains\LevelTwo\Blog\Comment;
 use GeekBrains\LevelTwo\Http\Actions\ActionsInterface;
+use GeekBrains\LevelTwo\Http\Auth\TokenAuthIdenticationInterface;
 use GeekBrains\LevelTwo\Http\Request;
 use GeekBrains\LevelTwo\Http\Response;
 use GeekBrains\LevelTwo\Users\Repositories\PostsRepositories\PostRepositoryInterface;
@@ -15,6 +16,7 @@ use GeekBrains\LevelTwo\Users\Exceptions\InvalidArgumentException;
 use GeekBrains\LevelTwo\Http\ErrResponse;
 use GeekBrains\LevelTwo\Users\Exceptions\PostNotFoundException;
 use GeekBrains\LevelTwo\Http\SuccessFullResponse;
+use GeekBrains\LevelTwo\Users\Exceptions\AuthExceptions;
 use GeekBrains\LevelTwo\Users\UUID;
 use Psr\Log\LoggerInterface;
 
@@ -24,6 +26,7 @@ class CreateComments implements ActionsInterface
         private CommentsRepositoryInterface $commentsRepository,
         private PostRepositoryInterface $postsRepository,
         private UsersRepositoryInterface $userRepository,
+        private TokenAuthIdenticationInterface $identification,
         private LoggerInterface $logger
     )
     {        
@@ -31,12 +34,14 @@ class CreateComments implements ActionsInterface
 
     public function handle(Request $request): Response
     {
-         // Cоздаем  UUID пользователя и статьи из данных запроса
-         try {
-            $authorUuid = new UUID($request->jsonBodyField('author_uuid'));
-        } catch (HttpException | InvalidArgumentException $err) {
-            return new ErrResponse($err->getMessage());
-        }
+
+        try {
+            $user = $this->identification->author($request);
+            } catch (AuthExceptions $err) {
+                return new ErrResponse($err->getMessage());
+            }
+
+         // Cоздаем  UUID статьи из данных запроса        
        
         try {
             $postUuid = new UUID($request->jsonBodyField('article_uuid'));
@@ -45,13 +50,8 @@ class CreateComments implements ActionsInterface
         }
 
 
-        // Ищем пользователя и статью в репозитории
-        try {
-            $user = $this->userRepository->get($authorUuid);
-        } catch (UserNotFoundExceptions $err) {
-            return new ErrResponse($err->getMessage());
-        }
-
+        // Ищем статью в репозитории
+       
         try {
             $post = $this->postsRepository->get($postUuid);
         } catch (PostNotFoundException $err) {

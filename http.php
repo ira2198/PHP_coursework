@@ -1,5 +1,7 @@
 <?php
 
+use GeekBrains\LevelTwo\Http\Actions\AuthAction\Login;
+use GeekBrains\LevelTwo\Http\Actions\AuthAction\LogOut;
 use GeekBrains\LevelTwo\Http\Actions\Comments\CreateComments;
 use GeekBrains\LevelTwo\Http\Actions\Comments\DeleteComments;
 use GeekBrains\LevelTwo\Http\Actions\likes\CreateLikeComment;
@@ -48,6 +50,8 @@ $routes = [
         '/user/show' => FindByLogin::class
     ],
     'POST' => [
+        '/logout'=> LogOut::class,
+        '/login' => Login::class,  
         '/user/create' => CreateUser::class,
         '/post/create' => CreatePost::class,          
         '/comment/create' => CreateComments::class,

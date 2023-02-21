@@ -19,13 +19,19 @@ class SqliteUsersRep implements UsersRepositoryInterface
     public function save( User $user): void 
     {
         $statement = $this->connectDB->prepare(
-            "INSERT INTO users (uuid, login, user_name, user_surname) VALUES (:uuid, :login, :user_name, :user_surname)"
+            "INSERT INTO users (uuid, login, user_name, user_surname, password) 
+            VALUES (:uuid, :login, :user_name, :user_surname, :password)
+            ON CONFLICT (uuid) DO UPDATE SET
+            user_name = :user_name,
+            user_surname = :user_surname"
         );   
+        
         $statement->execute([
             ':uuid' => $user -> getUuid(),
             ':login' => $user-> getLogin(),
             ':user_name' => $user->getUserName(),
-            ':user_surname' => $user->getUserSurname()      
+            ':user_surname' => $user->getUserSurname(),
+            ':password' => $user->getPassword()      
         ]);  
         
         $this->logger->info("User created: {$user->getUuid()} in SqliteUsersRep");
@@ -69,6 +75,8 @@ class SqliteUsersRep implements UsersRepositoryInterface
             new UUID($result['uuid']), 
             $result['login'],
             $result['user_name'], 
-            $result['user_surname']);
+            $result['user_surname'],
+            $result['password']
+        );
     }
 }

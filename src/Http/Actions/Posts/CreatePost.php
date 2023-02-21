@@ -8,7 +8,9 @@ use GeekBrains\LevelTwo\Http\Response;
 use GeekBrains\LevelTwo\Users\Repositories\PostsRepositories\PostRepositoryInterface;
 use GeekBrains\LevelTwo\Users\UUID;
 use GeekBrains\LevelTwo\Blog\Post;
+use GeekBrains\LevelTwo\Http\Auth\AuthenticationInterface;
 use GeekBrains\LevelTwo\Http\Auth\IdentificationInterface;
+use GeekBrains\LevelTwo\Http\Auth\TokenAuthIdenticationInterface;
 use GeekBrains\LevelTwo\Users\Exceptions\HttpException;
 use GeekBrains\LevelTwo\Http\ErrResponse;
 use GeekBrains\LevelTwo\Http\SuccessFullResponse;
@@ -19,10 +21,11 @@ class CreatePost implements ActionsInterface
 {
     
     public function __construct(
+        
         private PostRepositoryInterface $postsRepository,
-        private IdentificationInterface $identification,
+        private TokenAuthIdenticationInterface $identification,
 
-        private LoggerInterface $logger
+        private LoggerInterface $logger 
         ) 
     {
     }        
@@ -46,7 +49,7 @@ class CreatePost implements ActionsInterface
                 $user,
                 $request->jsonBodyField('title'),
                 $request->jsonBodyField('content'),
-        );
+            );
         } catch (HttpException $err) {
             return new ErrResponse($err->getMessage());
         }

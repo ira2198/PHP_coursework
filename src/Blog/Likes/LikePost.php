@@ -6,7 +6,7 @@ use GeekBrains\LevelTwo\Blog\Post;
 use GeekBrains\LevelTwo\Users\User;
 use GeekBrains\LevelTwo\Users\UUID;
 
-class LikePost extends Likes
+class LikePost extends Likes 
 {
     private Post $postLike;
 

@@ -55,6 +55,15 @@ $connectDB = new PDO('sqlite:' . __DIR__ . '/blog.sqlite');
 //     FOREIGN KEY (comment_uuid) REFERENCES comments(uuid)    
 // )');
 
+// __________________________токены
+
+
+// $connectDB->exec('CREATE TABLE tokens (
+//         token TEXT NOT NULL PRIMARY KEY,
+//         user_uuid TEXT NOT NULL,
+//         expires TEXT NOT NULL
+//         )'
+//     );
     
 //______________________________________________________________________________
 
@@ -64,6 +73,10 @@ $connectDB = new PDO('sqlite:' . __DIR__ . '/blog.sqlite');
 //
 
 // $connectDB->exec(
-//     "DROP TABLE comments "
+//     "DROP TABLE comments"
 // );
 
+
+// $connectDB->exec(
+// "ALTER TABLE users ADD password TEXT"
+// );

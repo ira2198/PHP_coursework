@@ -27,7 +27,7 @@ class SqliteLikeCommentsRep implements CommentLikeRepoInterface
                 ':uuid' => $like->getUuid(),
                 ':author_uuid' => $like-> getAuthorUuid()->getUuid(),
                 ':comment_uuid' => $like-> getCommentLike()->getUuid()
-                ,
+                
             ]);
             $this->logger->info("like to comment added");
     }
