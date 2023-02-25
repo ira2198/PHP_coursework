@@ -16,6 +16,11 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Dotenv\Dotenv;
+use Faker\Generator;
+use Faker\Guesser\Name;
+use Faker\Provider\Lorem;
+use Faker\Provider\ru_RU\Internet;
+use Faker\Provider\ru_RU\Text;
 use GeekBrains\LevelTwo\Http\Auth\AuthenticationInterface;
 use GeekBrains\LevelTwo\Http\Auth\BearerTokenAuthentication;
 use GeekBrains\LevelTwo\Http\Auth\IdentificationInterface;
@@ -26,6 +31,9 @@ use GeekBrains\LevelTwo\Http\Auth\PasswordAuthenticationInterface;
 use GeekBrains\LevelTwo\Http\Auth\TokenAuthIdenticationInterface;
 use GeekBrains\LevelTwo\Users\Repositories\TokenRepository\AuthTokenRepoInterface;
 use GeekBrains\LevelTwo\Users\Repositories\TokenRepository\sqliteAuthTokenRepository;
+use Faker\Provider\ru_RU\Person;
+
+
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -61,11 +69,33 @@ if ('yes' === $_ENV['LOG_TO_CONSOLE']) {
     $logger->pushHandler(new StreamHandler("php://stdout")) ; // сыпем в консоль
 }
 
+// добавляем фэйкер
 
+// Создаём объект генератора тестовых данных
+$faker = new Generator();
+
+// Инициализируем необходимые нам виды данных
+$faker->addProvider(new Person($faker));
+$faker->addProvider(new Name($faker));
+$faker->addProvider(new Text($faker));
+$faker->addProvider(new Internet($faker));
+$faker->addProvider(new Lorem($faker));
+
+
+// Добавляем г.т.д. в контейнер внедрения зависимостей
+$container->bind(
+    Generator::class,
+    $faker
+);
+
+
+// добавляем логер
 $container->bind(
     LoggerInterface::class,
     $logger
 );
+
+
 // 2. репозиторий статей
 $container->bind(
     PostRepositoryInterface::class,

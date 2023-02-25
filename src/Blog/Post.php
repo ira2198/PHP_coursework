@@ -9,7 +9,7 @@ class Post
 {
     public function __construct(
         private UUID $uuid, 
-        private User $auther,
+        private User $author,
         private string $title,
         private string $content
     )
@@ -18,7 +18,7 @@ class Post
 
     public function  __toString() 
     {
-        return $this->title . "\n" . $this->content . ".\n" . 'Автор: ' . $this->auther  . PHP_EOL;
+        return $this->title . "\n" . $this->content . ".\n" . 'Автор: ' . $this->author  . PHP_EOL;
     }  
 
 
@@ -29,7 +29,7 @@ class Post
     }
     public function getAuther (): User
     {
-        return $this->auther;
+        return $this->author;
     }
     public function getTitle (): string
     {
