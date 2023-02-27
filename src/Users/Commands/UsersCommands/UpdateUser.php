@@ -30,6 +30,7 @@ class UpdateUser extends Command
             InputArgument::REQUIRED,
             'UUID of a user to update'
         )
+        
         ->addOption(
             // Имя, cокращённое имя
             'user_name',

@@ -8,8 +8,9 @@ use GeekBrains\LevelTwo\Users\UUID;
 use GeekBrains\LevelTwo\Users\Repositories\UsersRepositories\SqliteUsersRep;
 use GeekBrains\LevelTwo\Users\Repositories\PostsRepositories\sqlitePostsRepository;
 use GeekBrains\LevelTwo\Users\Exceptions\CommentNotFoundException;
-
+use GeekBrains\LevelTwo\Users\Exceptions\CommentRepoExeption;
 use PDO;
+use PDOException;
 use Psr\Log\LoggerInterface;
 
 class sqliteCommentsRepository implements CommentsRepositoryInterface 
@@ -78,6 +79,7 @@ class sqliteCommentsRepository implements CommentsRepositoryInterface
 
     public function delete(UUID $uuid)
     {
+        try {
         $statement= $this->connectDB->prepare(
             'DELETE FROM comments WHERE comments.uuid = :uuid;'
         );
@@ -85,6 +87,11 @@ class sqliteCommentsRepository implements CommentsRepositoryInterface
         $statement->execute([
             ':uuid' => $uuid
         ]);
+        } catch (PDOException $err) {
+            throw new CommentRepoExeption(
+                $err->getMessage(), (int)$err->getCode(), $err
+            );
+        }
         $this->logger->info("The comment: $uuid was deleted in sqliteCommentsRepository class"); 
     }
 }

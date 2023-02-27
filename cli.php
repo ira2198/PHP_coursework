@@ -1,5 +1,6 @@
 <?php
 
+use GeekBrains\LevelTwo\Users\Commands\CommentsCommand\CommentsDelete;
 use GeekBrains\LevelTwo\Users\Commands\FakeData\PopulateDB;
 use GeekBrains\LevelTwo\Users\Commands\PostsCommands\PostDelete;
 use GeekBrains\LevelTwo\Users\Commands\UsersCommands\CreateUser;
@@ -20,6 +21,7 @@ $application = new Application(); // класс из симфони
 $commandsClasses = [
     CreateUser::class,
     PostDelete::class,
+    CommentsDelete::class,
     UpdateUser::class,
     PopulateDB::class
 ];
